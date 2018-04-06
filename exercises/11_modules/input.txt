@@ -1,0 +1,14 @@
+R1>show cdp neighbors
+SW1              Eth 0/0           140          S I      WS-C3750-  Eth 0/1
+R2>show cdp neighbors
+SW1              Eth 0/0            125          S I      WS-C3750- Eth 0/2
+SW2              Eth 0/1            137          S I      WS-C3750- Eth 0/1
+R3>show cdp neighbors
+SW1              Eth 0/0            131          S I      WS-C3750- Eth 0/3
+R4               Eth 0/1            145        R S I      2811      Eth 0/0
+R5               Eth 0/2            123        R S I      2811      Eth 0/0
+SW1>show cdp neighbors
+R1           Eth 0/1         122           R S I           2811       Eth 0/0
+R2           Eth 0/2         143           R S I           2811       Eth 0/0
+R3           Eth 0/3         151           R S I           2811       Eth 0/0
+

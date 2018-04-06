@@ -1,3 +1,4 @@
+#!/bin/python
 # -*- coding: utf-8 -*-
 # Based on http://matthiaseisen.com/articles/graphviz/
 
@@ -20,16 +21,16 @@ styles = {
     },
     'nodes': {
         'fontname': 'Helvetica',
-        'shape': 'box',
+        'shape': 'ellipse',
         'fontcolor': 'white',
         'color': '#006699',
         'style': 'filled',
         'fillcolor': '#006699',
-        'margin': '0.4',
+        'margin': '0.2',
     },
     'edges': {
-        'style': 'dashed',
-        'color': 'green',
+        'style': 'bold',
+        'color': 'red',
         'arrowhead': 'open',
         'fontname': 'Courier',
         'fontsize': '14',
@@ -45,7 +46,7 @@ def apply_styles(graph, styles):
     return graph
 
 
-def draw_topology(topology_dict, output_filename='img/topology'):
+def draw_topology(topology_dict, output_filename='img/topology'): #img/topology'
     '''
     topology_dict - словарь с описанием топологии
 
@@ -63,7 +64,7 @@ def draw_topology(topology_dict, output_filename='img/topology'):
         item[0]
         for item in list(topology_dict.keys()) + list(topology_dict.values())
     ])
-
+    #print(nodes)
     g1 = gv.Graph(format='svg')
 
     for node in nodes:
@@ -72,6 +73,7 @@ def draw_topology(topology_dict, output_filename='img/topology'):
     for key, value in topology_dict.items():
         head, t_label = key
         tail, h_label = value
+        #print(key)
         g1.edge(
             head, tail, headlabel=h_label, taillabel=t_label, label=" " * 12)
 

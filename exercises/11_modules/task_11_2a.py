@@ -1,3 +1,4 @@
+#!/bin/python
 # -*- coding: utf-8 -*-
 '''
 Задание 11.2a
@@ -11,24 +12,29 @@
 * sh_cdp_n_r2.txt
 * sh_cdp_n_r3.txt
 
-
 Не копировать код функций parse_cdp_neighbors и draw_topology.
 
 В итоге, должен быть сгенерировано изображение топологии.
 Результат должен выглядеть так же, как схема в файле task_11_2a_topology.svg
-
-
-При этом:
-* Интерфейсы могут быть записаны с пробелом Fa 0/0 или без Fa0/0.
-* Расположение устройств на схеме может быть другим
-* Соединения должны соответствовать схеме
-
-Ограничение: Все задания надо выполнять используя только пройденные темы.
-
-> Для выполнения этого задания, должен быть установлен graphviz:
-> apt-get install graphviz
-
-> И модуль python для работы с graphviz:
-> pip install graphviz
-
 '''
+from pprint import pprint
+from task_11_1 import parse_cdp_neighbors
+from draw_network_graph import draw_topology
+
+infiles = [ 'sh_cdp_n_sw1.txt',
+			'sh_cdp_n_r1.txt',
+			'sh_cdp_n_r2.txt',
+			'sh_cdp_n_r3.txt']
+
+topology = {}
+
+for file in infiles:
+	with open(file) as show_command:
+		parsed = parse_cdp_neighbors(show_command)
+		for pk,pv in parsed.items():
+			if not pk in topology.values():
+				topology[pk]=pv
+
+pprint(topology)
+
+draw_topology(topology)
