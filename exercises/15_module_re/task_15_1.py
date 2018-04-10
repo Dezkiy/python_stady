@@ -40,9 +40,17 @@ Loopback100                100.0.0.1       YES manual up                    up
 '''
 
 import re
+from sys import argv
 from pprint import pprint
 
-with open(sh_ip_int_br.txt) as f:
-		for line in f:
-			print(line)
-			# if sdf:
+try:
+	file, input_user = argv[1:]
+except ValueError:
+	file = argv[1]
+	input_user = '.*'	
+
+with open(file) as f:
+	for line in f:
+		match=re.search(input_user, line)
+		if match:
+			print(line.rstrip())
