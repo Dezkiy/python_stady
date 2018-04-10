@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 '''
 Задание 15.1
@@ -36,5 +37,12 @@ FastEthernet0/2            10.0.13.1       YES manual up                    up
 Loopback0                  10.1.1.1        YES manual up                    up
 Loopback100                100.0.0.1       YES manual up                    up
 
-
 '''
+
+import re
+from pprint import pprint
+
+with open(sh_ip_int_br.txt) as f:
+		for line in f:
+			print(line)
+			# if sdf:
