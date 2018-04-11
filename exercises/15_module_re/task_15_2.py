@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 '''
 Задание 15.2
@@ -15,8 +16,20 @@
 
 Соответственно, регулярное выражение должно описывать подстроку с IP-адресом (то есть, совпадением должен быть IP-адрес).
 
-
 Обратите внимание, что в данном случае, можно не проверять корректность IP-адреса,
 диапазоны адресов и так далее, так как обрабатывается вывод команды, а не ввод пользователя.
 
 '''
+import re
+from pprint import pprint
+
+def return_match(file,regex):
+	result=[]
+	with open(file) as f:
+		for line in f:
+			match=re.search(regex,line)
+			if match:
+				result.append(match.group())
+	return result
+# pprint(return_match('sh_ip_int_br.txt','\S+ +\d+.\d+\.\d+.\d+.*'))
+pprint(return_match('sh_ip_int_br.txt','\d+.\d+\.\d+.\d+'))
