@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 '''
 Задание 15.3b
@@ -24,3 +25,30 @@ Ethernet0/1 соответствует список из двух кортеже
 диапазоны адресов и так далее, так как обрабатывается вывод команды, а не ввод пользователя.
 
 '''
+
+import re
+
+def parce_cfg(file):
+	regex = ('^interface\s+(?P<intf>(Ethernet|Tunnel|Loopback)\d+/*\d*.*)'
+			'|^\s+ip\s+address\s+(?P<ip_1>[\d+.]+)\s+(?P<mask_1>[\d+.]+)'
+			'|^\s+ip\s+address\s+(?P<ip_2>[\d+.]+)\s+(?P<mask_2>[\d+.]+\s+secondary$)')
+	result={}
+	with open(file) as f:
+		for line in f:
+			match = re.search(regex, line)
+			if match:
+				if match.lastgroup == 'intf':
+					intf = match.group(match.lastgroup)
+					result[intf] = []
+				elif intf:
+					tupl=(match.group('ip_1'),match.group('mask_1'))
+					if match.lastgroup == 'ip_2':
+						print("!")
+						tupl2=(match.group('ip_2'))
+						result[intf] = [tupl2]
+					else:
+						# print("OK")
+						result[intf] = [tupl]
+	return result
+
+print(parce_cfg('config_r2.txt'))

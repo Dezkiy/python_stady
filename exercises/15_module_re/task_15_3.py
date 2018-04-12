@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 '''
 Задание 15.3
@@ -22,3 +23,16 @@
 диапазоны адресов и так далее, так как обрабатывается вывод команды, а не ввод пользователя.
 
 '''
+import re
+
+def parce_cfg(file):
+	result=[]
+	with open(file) as f:
+		for line in f:
+			match=re.search('^\s+ip\s+address\s+([\d+.]+)\s+([\d+.]+)',line)
+			if match:
+				tupl=(match.group(1),match.group(2))
+				result.append(tupl)
+	return result
+
+print(parce_cfg('config_r1.txt'))

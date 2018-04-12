@@ -24,15 +24,18 @@
 import re
 
 def parce_cfg(file):
+	regex = ('^interface\s+(?P<intf>(Ethernet|Tunnel|Loopback)\d+/*\d*.*)'
+			'|^\s+ip\s+address\s+(?P<ip>[\d+.]+)\s+(?P<mask>[\d+.]+)') 
 	result={}
 	with open(file) as f:
 		for line in f:
-			if line.startswith('interface'):
-				interface = re.search('^interface\s(?P<intf>\S+)', line).group('intf')
-				result[interface] = ()
-			elif line.startswith(' ip address'):
-				ip, mask = re.search('^\s+ip\s+address\s+(?P<ip>[\d+.]+)\s+(?P<mask>[\d+.]+)', line).group('ip','mask')
-				result[interface] = (ip,mask)
+			match = re.search(regex, line)
+			if match:
+				if match.lastgroup == 'intf':
+					intf = match.group(match.lastgroup)
+					result[intf] = ()
+				elif intf:
+					result[intf] = (match.group('ip'),match.group('mask'))
 	return result
 
 print(parce_cfg('config_r1.txt'))
