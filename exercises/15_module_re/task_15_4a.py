@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 '''
 Задание 15.4a
@@ -21,5 +22,20 @@
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 '''
+from pprint import pprint
+from task_15_4 import parse_sh_ip_int_br
 
-headers = ['interface', 'address', 'status', 'protocol']
+lis = parse_sh_ip_int_br('sh_ip_int_br_2.txt')
+head = ['interface', 'address', 'status', 'protocol']
+
+def convert_to_dict(in_list,headres):
+	result=[]
+	for line in in_list:
+		dic={headres[0]:line[0],
+			headres[1]:line[1],
+			headres[2]:line[2],
+			headres[3]:line[3]}
+		result.append(dic)
+	return result
+
+pprint(convert_to_dict(lis,head))

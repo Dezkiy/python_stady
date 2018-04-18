@@ -29,26 +29,24 @@ Ethernet0/1 соответствует список из двух кортеже
 import re
 
 def parce_cfg(file):
-	regex = ('^interface\s+(?P<intf>(Ethernet|Tunnel|Loopback)\d+/*\d*.*)'
-			'|^\s+ip\s+address\s+(?P<ip_1>[\d+.]+)\s+(?P<mask_1>[\d+.]+)'
-			'|^\s+ip\s+address\s+(?P<ip_2>[\d+.]+)\s+(?P<mask_2>[\d+.]+\s+secondary$)')
 	result={}
+	regex_ip	 =	'^\s+ip\s+address\s+(?P<ip>[\d+.]+)\s+(?P<mask>[\d+.]+$)'
+	regex_ip_sec =	'^\s+ip\s+address\s+(?P<ip2>[\d+.]+)\s+(?P<mask2>[\d+.]+)\s+secondary$'
 	with open(file) as f:
 		for line in f:
-			match = re.search(regex, line)
-			if match:
-				if match.lastgroup == 'intf':
-					intf = match.group(match.lastgroup)
-					result[intf] = []
-				elif intf:
-					tupl=(match.group('ip_1'),match.group('mask_1'))
-					if match.lastgroup == 'ip_2':
-						print("!")
-						tupl2=(match.group('ip_2'))
-						result[intf] = [tupl2]
-					else:
-						# print("OK")
-						result[intf] = [tupl]
+			if line.startswith('interface'):
+				interface = re.search('^interface\s(?P<intf>\S+)', line).group('intf')
+				result[interface] = []
+			elif re.match(regex_ip, line):
+				ip, mask = re.search(regex_ip, line).group('ip','mask')
+				tupl=(ip,mask)
+				lis=[tupl]
+				result[interface] = lis
+			elif re.search(regex_ip_sec, line):
+				ip2, mask2 = re.search(regex_ip_sec, line).group('ip2','mask2')
+				tupl2=(ip2, mask2)
+				lis.append(tupl2)
+				result[interface] = lis
 	return result
 
 print(parce_cfg('config_r2.txt'))
