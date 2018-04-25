@@ -46,3 +46,15 @@ def parse_sh_cdp_neighbors(output):
 
 with open('sh_cdp_n_sw1.txt') as f:
 	print(parse_sh_cdp_neighbors(f.read()))
+
+
+# def parse_sh_cdp_neighbors(command_output):									#вариант от natasha			
+#     regex = re.compile('(?P<r_dev>\w+)  +(?P<l_intf>\S+ \S+)'
+#                        '  +\d+  +[\w ]+  +\S+ +(?P<r_intf>\S+ \S+)')
+#     connect_dict = {}
+#     l_dev = re.search('(\S+)>.*', command_output).group(1)
+#     connect_dict[l_dev] = {}
+#     for match in regex.finditer(command_output):
+#         r_dev, l_intf, r_intf = match.group('r_dev', 'l_intf', 'r_intf')
+#         connect_dict[l_dev][l_intf] = {r_dev: r_intf}
+#     return connect_dict	
