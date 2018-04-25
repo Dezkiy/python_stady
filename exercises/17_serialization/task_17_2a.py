@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 '''
 Задание 17.2a
@@ -25,3 +26,4 @@
 
 Не копировать код функции parse_sh_cdp_neighbors
 '''
+
