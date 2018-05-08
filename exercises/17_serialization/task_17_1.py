@@ -48,7 +48,7 @@ def parse_sh_version(output):
 			match=re.search('^Cisco IOS Software.+Version\s+(?P<ios>\d+\.\d+\(\d+\)\w+),.+\)$'
 							'|^System image file is "(?P<image>\w+:.+)"$'
 							'|(?P<uptime>\d+\s+days,\s+\d+\s+hours,\s+\d+\s+minutes$)'
-							, line)
+							,line)
 			if match:
 				result.append(match.group(match.lastgroup))
 	return tuple(result)

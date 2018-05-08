@@ -1,7 +1,6 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 '''
-Задание 17.2c
-
 С помощью функции draw_topology из файла draw_network_graph.py
 сгенерировать топологию, которая соответствует описанию в файле topology.yaml
 
@@ -20,12 +19,33 @@
 * Интерфейсы могут быть записаны с пробелом Fa 0/0 или без Fa0/0.
 * Расположение устройств на схеме может быть другим
 * Соединения должны соответствовать схеме
-
-
-> Для выполнения этого задания, должен быть установлен graphviz:
-> apt-get install graphviz
-
-> И модуль python для работы с graphviz:
-> pip install graphviz
-
 '''
+
+from draw_network_graph import draw_topology
+import yaml
+
+with open('topology.yaml') as f:
+	topology = yaml.load(f)
+
+# 		перепарсинг
+# Перобразование из вида: {'R1': {'Eth 0/0': {'SW1': 'Eth 0/1'}}, 'R2': {'Eth 0/0': {'SW1': 'Eth 0/2'}}} 
+#				 в	вид:	{('CentralRouter-1', 'Gig4/0'): ('khb-tet-lan1', 'Gig0/52')}
+the_end={}
+
+for Tk,Tv in topology.items():
+	for k,v in Tv.items():
+		for sk,sv in v.items():
+			list1=[Tk,k]
+			list2=[sk,sv] 
+			tuple1=tuple(list1)
+			tuple2=tuple(list2)
+			the_end[tuple1] = tuple2
+
+the_end_end={}
+for pk,pv in the_end.items():
+	if not pk in the_end_end.values():
+		the_end_end[pk]=pv
+
+print(the_end_end) 	
+
+draw_topology(the_end_end)

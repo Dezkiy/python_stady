@@ -27,3 +27,34 @@
 Не копировать код функции parse_sh_cdp_neighbors
 '''
 
+from task_17_2 import parse_sh_cdp_neighbors 
+import yaml
+
+infiles = ['sh_cdp_n_sw1.txt',
+			'sh_cdp_n_r1.txt',
+			'sh_cdp_n_r2.txt',
+			'sh_cdp_n_r3.txt',
+			'sh_cdp_n_r4.txt',
+			'sh_cdp_n_r5.txt',
+			'sh_cdp_n_r6.txt']
+
+topology={}
+
+for file in infiles:
+	with open(file) as show_command:
+		parsed = parse_sh_cdp_neighbors(show_command.read())
+		for pk,pv in parsed.items():
+			if not pk in topology.values():
+				topology[pk]=pv
+
+print(topology)
+
+def dict_to_yaml (file, indict):
+	'''
+	ожидает словарь (indict)
+	записыват в файл в формате yaml
+	'''
+	with open(file, 'w') as f:
+		yaml.dump(indict, f, default_flow_style=False)
+
+dict_to_yaml ('topology.yaml', topology)

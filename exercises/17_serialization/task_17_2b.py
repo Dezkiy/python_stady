@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 '''
 Задание 17.2b
@@ -29,3 +30,42 @@
 
 Не копировать код функции parse_sh_cdp_neighbors
 '''
+from task_17_2 import parse_sh_cdp_neighbors 
+import yaml
+
+infiles = ['sh_cdp_n_sw1.txt',
+			'sh_cdp_n_r1.txt',
+			'sh_cdp_n_r2.txt',
+			'sh_cdp_n_r3.txt',
+			'sh_cdp_n_r4.txt',
+			'sh_cdp_n_r5.txt',
+			'sh_cdp_n_r6.txt']
+
+def generate_topology_from_cdp(list_of_files, save_to_file=True, topology_filename='topology.yaml'):
+	'''
+	Параметрами функции generate_topology_from_cdp:
+	* list_of_files - список файлов из которых надо считать вывод команды sh cdp neighbor
+	* save_to_file - этот параметр управляет тем, будет ли записан в файл, итоговый словарь
+	 * значение по умолчанию - True
+	* topology_filename - имя файла, в который сохранится топология.
+	 * по умолчанию, должно использоваться имя topology.yaml.
+	 * топология сохраняется только, если аргумент save_to_file указан равным True
+
+	Функция возвращает словарь, который описывает топологию.
+	Словарь должен быть в том же формате, что и в задании 17.2a.
+	'''
+	topology={}
+	for file in list_of_files:
+		with open(file) as show_command:
+			parsed = parse_sh_cdp_neighbors(show_command.read())
+			for pk,pv in parsed.items():
+				if not pk in topology.values():
+					topology[pk]=pv
+
+		if save_to_file:
+			with open(topology_filename, 'w') as f:
+				yaml.dump(topology, f, default_flow_style=False)	
+
+	print(topology)				
+
+generate_topology_from_cdp(infiles, save_to_file=True)#, topology_filename='OLOLO.yaml')

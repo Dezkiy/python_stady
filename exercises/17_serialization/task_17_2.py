@@ -27,34 +27,37 @@ R6           Fa 0/2          143           R S I           2811       Fa 0/0
 '''
 import re
 
-def parse_sh_cdp_neighbors(output):
-	result={}
-	res={}
+# def parse_sh_cdp_neighbors(output):						# вариант с двумя циклами отрабатывает не так как нужно (оставляет пустой словарь)
+# 	result={}
+# 	res={}
 
-	output_list=output.split('\n')
+# 	output_list=output.split('\n')
 
-	finda=re.findall('(\w+)\s+(\w+\s?\d+/\d+).+(?:\w ){3}\s+\w+\s+(\w+\s?\d+/\d+)', output)
+# 	finda=re.findall('(\w+)\s+(\w+\s?\d+/\d+).+(?:\w ){3}\s+\w+\s+(\w+\s?\d+/\d+)', output)
+# 					#  \w+ +\S+ +\S+ +\d+ +[RTBSHIr ]+\S+ +\S+ +\S+
+# 	for l in finda:
+# 		res[l[1]]={l[0]:l[2]}
 
-	for l in finda:
-		res[l[1]]={l[0]:l[2]}
+# 	for line in output_list:
+# 		match=re.search('(?P<device>\w+)[>#].+', line)
+# 		if match:
+# 			result[match.group('device')]=res
+# 			return result
 
-	for line in output_list:
-		match=re.search('(?P<device>\w+)[>#].+', line)
-		if match:
-			result[match.group('device')]=res
-			return result
-
-with open('sh_cdp_n_sw1.txt') as f:
-	print(parse_sh_cdp_neighbors(f.read()))
+# with open('sh_cdp_n_sw1.txt') as f:
+# 	print(parse_sh_cdp_neighbors(f.read()))
 
 
-# def parse_sh_cdp_neighbors(command_output):									#вариант от natasha			
-#     regex = re.compile('(?P<r_dev>\w+)  +(?P<l_intf>\S+ \S+)'
-#                        '  +\d+  +[\w ]+  +\S+ +(?P<r_intf>\S+ \S+)')
-#     connect_dict = {}
-#     l_dev = re.search('(\S+)>.*', command_output).group(1)
-#     connect_dict[l_dev] = {}
-#     for match in regex.finditer(command_output):
-#         r_dev, l_intf, r_intf = match.group('r_dev', 'l_intf', 'r_intf')
-#         connect_dict[l_dev][l_intf] = {r_dev: r_intf}
-#     return connect_dict	
+def parse_sh_cdp_neighbors(command_output):								#вариант от natasha(переделанный)			
+	regex = re.compile('(?P<rem_dev>\w+)  +(?P<loc_intf>\S+ \S+)'
+					'  +\d+  +[RTBSHIr ]+  +\S+ +(?P<rem_intf>\S+ \S+)')
+	connect_dict = {}
+	dev = re.search('(\S+)[>#].*', command_output).group(1)
+	connect_dict[dev] = {}
+	for match in regex.finditer(command_output):
+		rem_dev, loc_intf, rem_intf = match.group('rem_dev', 'loc_intf', 'rem_intf')
+		connect_dict[dev][loc_intf] = {rem_dev: rem_intf}
+	return connect_dict
+
+# with open('sh_cdp_n_sw1.txt') as f:
+# 	print(parse_sh_cdp_neighbors(f.read()))
