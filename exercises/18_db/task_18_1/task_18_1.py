@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 '''
 Задание 18.1
@@ -31,3 +32,15 @@
 На данном этапе, оба скрипта вызываются без аргументов.
 
 '''
+from create_db import *
+from add_data import *
+
+db_filename = 'dhcp_snooping.db'
+schema_filename = 'dhcp_snooping_schema.sql'
+dhcp_snoop_files = glob.glob('sw*_dhcp_snooping.txt')
+
+if assay_to_exist_db_file(db_filename) == False:
+	create_db_file(db_filename, schema_filename)
+else:
+	print('Database exists, assume dhcp table does, too.')
+
