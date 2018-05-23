@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import os
 import sqlite3
 import re
@@ -15,6 +16,8 @@ with open('dhcp_snooping.txt') as data:
         match = regex.search(line)
         if match:
             result.append(match.groups())
+
+print('$$$', result)
 
 db_exists = os.path.exists(db_filename)
 
@@ -34,6 +37,7 @@ print('Inserting DHCP Snooping data')
 for row in result:
     try:
         with conn:
+            print("####",row)
             query = '''insert into dhcp (mac, ip, vlan, interface)
                        values (?, ?, ?, ?)'''
             conn.execute(query, row)
