@@ -39,19 +39,25 @@ db_filename = 'dhcp_snooping.db'
 schema_filename = 'dhcp_snooping_schema.sql'
 dhcp_snoop_files = glob.glob('sw*_dhcp_snooping.txt')
 
-regex_1 = '(\S+)  (.+)'
-query_1 = '''insert into switches (hostname, location)
+# Регулярное выражения и запрос для такблици "switches"
+regex_1 =	'(\S+)  (.+)'
+query_1 = 	'''insert into switches (hostname, location)
 			values (?, ?)'''
 
+# Регулярное выражения и запрос для такблици "dhcp"
 regex_2	=	'(\S+) +(\S+) +\d+ +\S+ +(\d+) +(\S+) +(\S+)'
 query_2	=	'''insert into dhcp (mac, ip, vlan, interface, switch)
 			values (?, ?, ?, ?, ?)'''
 
+# Проверяем существует ли файл базы(ф-я: assay_to_exist_db_file),
+# если файла нет,то создаем (ф-я: create_db_file)
 if assay_to_exist_db_file(db_filename) == False:
 	create_db_file(db_filename, schema_filename)
 else:
 	print('Database exists, assume dhcp table does, too.')
+	# Если файл базы есть, то подразумевается, что в ней есть таблица DHCP
 
+print('===============Data for create table "switches"==')
 
 with open('switches.yml') as f:
 	templates = yaml.load(f)
@@ -67,7 +73,7 @@ print('****************')
 lot=create_data_for_db (list_of_str_1, regex_1)
 insert_data_to_db(lot, query_1, db_filename)
 
-print('=========================')
+print('===============Data for create table "dhcp"======')
 
 list_of_str_2=[]
 

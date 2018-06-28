@@ -19,10 +19,12 @@ import glob,re,sqlite3,yaml,pprint
 db_filename = 'dhcp_snooping.db'
 dhcp_snoop_files = glob.glob('sw*_dhcp_snooping.txt')
 
-regex_1='(\S+)  (.+)'
-query_1='''insert into switches (hostname, location)
-		values (?, ?)'''
+# Регулярное выражения и запрос для такблици "switches"
+regex_1 =	'(\S+)  (.+)'
+query_1 = 	'''insert into switches (hostname, location)
+			values (?, ?)'''
 
+# Регулярное выражения и запрос для такблици "dhcp"
 regex_2='(\S+) +(\S+) +\d+ +\S+ +(\d+) +(\S+)'
 query_2='''insert into dhcp (mac, ip, vlan, interface)
 		values (?, ?, ?, ?)'''
@@ -61,8 +63,9 @@ def insert_data_to_db (list_of_tuple, query, db_file):
 	conn.close()
 
 
-
 if __name__ == "__main__":
+
+	print('====DATA for creating table "switches"==')
 
 	with open('switches.yml') as f:
 		templates = yaml.load(f)
@@ -78,8 +81,10 @@ if __name__ == "__main__":
 	lot=create_data_for_db (list_of_str_1, regex_1)
 	insert_data_to_db(lot, query_1, db_filename)
 
-	print('=========================')
+	print('====DATA for creating table "dhcp"======')
 	
+	list_of_str_2=[]
+
 	for file in dhcp_snoop_files:
 		with open (file) as f:
 			for string in f:
