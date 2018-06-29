@@ -15,8 +15,8 @@ create_db.py
 """
 import sqlite3,os
 
-# db_filename = 'dhcp_snooping.db'
-# schema_filename = 'dhcp_snooping_schema.sql'
+db_filename = 'dhcp_snooping.db'
+schema_filename = 'dhcp_snooping_schema.sql'
 
 def assay_to_exist_db_file(db_file):
 	'''
@@ -40,14 +40,16 @@ def create_db_file(db_file, schema_file):
 	'''	
 	conn = sqlite3.connect(db_file)
 
-	print('Creating schema...')
+	print('> Creating schema...')
 	with open(schema_file, 'r') as f:
 		schema = f.read()
 	conn.executescript(schema)
-	print('Done')
+	print('> Done')
 
-# if __name__ == "__main__":
-# 	if assay_to_exist_db_file(db_filename) == False:
-# 		create_db_file(db_filename, schema_filename)
-# 	else:
-# 		print('Database exists, assume dhcp table does, too.')
+# Проверяем существует ли файл базы(ф-я: assay_to_exist_db_file),
+# если файла нет,то создаем (ф-я: create_db_file)
+if assay_to_exist_db_file(db_filename) == False:
+	create_db_file(db_filename, schema_filename)
+else:
+	print('> Database exists, assume dhcp table does, too.')
+	# Если файл базы есть, то подразумевается, что в ней есть таблица DHCP

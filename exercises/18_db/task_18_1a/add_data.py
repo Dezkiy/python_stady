@@ -3,26 +3,16 @@
 '''
 Задание 18.1a
 
-Скопировать скрипт add_data.py из задания 18.1.
-
 Добавить в файл add_data.py проверку на наличие БД:
 * если файл БД есть, записать данные
 * если файла БД нет, вывести сообщение, что БД нет и её необходимо сначала создать
-
 '''
 
-import glob,re,os,sqlite3,yaml,pprint
+import glob, sqlite3, re           #,os
+from create_db import assay_to_exist_db_file
 
-db_filename = 'dhcp_snooping.db'
-dhcp_snoop_files = glob.glob('sw*_dhcp_snooping.txt')
-
-regex_1='(\S+)  (.+)'
-query_1='''insert into switches (hostname, location)
-		values (?, ?)'''
-
-regex_2='(\S+) +(\S+) +\d+ +\S+ +(\d+) +(\S+)'
-query_2='''insert into dhcp (mac, ip, vlan, interface)
-		values (?, ?, ?, ?)'''
+# db_filename = 'dhcp_snooping.db'
+# dhcp_snoop_files = glob.glob('sw*_dhcp_snooping.txt')
 
 def create_data_for_db (list_of_str, regex):
 	'''
@@ -37,69 +27,25 @@ def create_data_for_db (list_of_str, regex):
 			result.append(match.groups())
 	return result
 
-def insert_data_to_db (list_of_tuple, query, db_file):
+def insert_data_to_db (list_of_tuple, query, db_file, assay_to_exist_db_file_IN_DEF):
 	'''
 	Добавляет данные в БД.
-	Ожидает: списко кортежей, sqlite запрос и файл БД.
+	Ожидает: списко кортежей, sqlite запрос,файл БД и флаг наличия файла ДБ.
+	Есть проверка на наличие файла БД
 	'''
-	print('Inserting data')
+	print('> Inserting data...')
 	
-	conn = sqlite3.connect(db_file)
+	if assay_to_exist_db_file_IN_DEF == True:
+		print ('>> File DB exist')
+		conn = sqlite3.connect(db_file)
 
-	for tupl in list_of_tuple:
-		print(tupl)
-		try:
-			with conn:
-				conn.execute(query, tupl)
-		except sqlite3.IntegrityError as e:
-			print('Error occured: ', e)
-	conn.close()
-
-# ##
-# db_exists = os.path.exists(db_filename)
-
-# conn = sqlite3.connect(db_filename)
-
-# if not db_exists:
-#     print('Creating schema...')
-#     with open(schema_filename, 'r') as f:
-#         schema = f.read()
-#     conn.executescript(schema)
-#     print('Done')
-# else:
-#     print('Database exists, assume dhcp table does, too.')
-##
-
-if __name__ == "__main__":
-	
-	print('==DATA fo creating table "switches"==')
-
-	with open('switches.yml') as f:
-		templates = yaml.load(f)
-	list_of_str_1=[]
-	li=list(list(templates.values())[0].items())
-	for c,v in li:
-		list_of_str_1.append(c+'  '+v)
-
-	print('****OUTPUT create_data_for_db for "switches": ')
-	print(create_data_for_db (list_of_str_1, regex_1))
-
-	print('****************')
-	lot=create_data_for_db (list_of_str_1, regex_1)
-	insert_data_to_db(lot, query_1, db_filename)
-
-	print('=========================')
-	
-	list_of_str_2=[]
-
-	for file in dhcp_snoop_files:
-		with open (file) as f:
-			for string in f:
-				list_of_str_2.append(string.rstrip())
-
-	print('****OUTPUT create_data_for_db for "dhcp": ')
-	print(create_data_for_db (list_of_str_2, regex_2))
-
-	print('****************')
-	lot2=create_data_for_db (list_of_str_2, regex_2)
-	insert_data_to_db(lot2, query_2, db_filename)
+		for tupl in list_of_tuple:
+			print(tupl)
+			try:
+				with conn:
+					conn.execute(query, tupl)
+			except sqlite3.IntegrityError as e:
+				print('>>> Error occured: ', e)
+		conn.close()
+	else:
+		print ('>> File DB does not exist')
